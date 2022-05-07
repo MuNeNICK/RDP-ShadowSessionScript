@@ -6,14 +6,15 @@ set SessionStatus=
 set SessionID=
 
 rem Set Windows Authentication
-cmdkey /generic:TERMSRV/%winip% /user:%username% /pass:%password%
+cmdkey /add:%winip% /user:%username% /pass:%password%
 
 rem Get Session Number
 for /f "usebackq delims=" %%A in (`query session /server:%winip%`) do set SessionStatus=%%A
-set SessionID=%SessionStatus:~9,9%
+set SessionID=%SessionStatus:~45,1%
 
 rem Connect Shadow Session
-start mstsc /v:%winip% /control /noConsentPrompt /shadow:%SessionID% /multimon
+start mstsc /v:%winip% /control /noConsentPrompt /shadow:%SessionID%
 timeout 5
 
-cmdkey /delete:TERMSRV/%winip% /user:%username% /pass:%password%
+cmdkey /delete:%winip%
+
